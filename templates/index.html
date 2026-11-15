@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Gastos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="navbar-brand">Control de Gastos Personales</span>
+        <div>
+            <a href="{{ url_for('reporte') }}" class="btn btn-success">Descargar Reporte (CSV)</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Formulario -->
+            <div class="col-form">
+                <div class="card">
+                    <div class="card-header-blue">Registrar Nuevo Gasto</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="form-group">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" name="fecha" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Descripción</label>
+                                <input type="text" name="descripcion" class="form-control" placeholder="Ej. Almuerzo" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Monto (S/)</label>
+                                <input type="number" step="0.01" name="monto" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Gasto</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="col-table">
+                <div class="card">
+                    <div class="card-header-gray">
+                        <span>Historial de Gastos</span>
+                        <span class="badge-total">Total: S/ {{ "%.2f"|format(total) }}</span>
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Descripción</th>
+                                    <th>Monto</th>
+                                    <th class="text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for g in gastos %}
+                                <tr>
+                                    <td>{{ g[1] }}</td>
+                                    <td>{{ g[2] }}</td>
+                                    <td><strong>S/ {{ "%.2f"|format(g[3]) }}</strong></td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('eliminar', id=g[0]) }}" class="btn btn-danger">Eliminar</a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No hay gastos registrados aún.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
